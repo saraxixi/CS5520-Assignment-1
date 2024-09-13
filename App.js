@@ -10,9 +10,9 @@ export default function App() {
 
       {/* Form Container */}
       <View style={styles.container}>
-        <Input title="Name" />
-        <Input title="Email" />
-        <Input title="Password" />
+        <Input title="Name" shouldFocus={false}/>
+        <Input title="Email" shouldFocus={false}/>
+        <Input title="Phone Number" shouldFocus={false}/>
       </View>
       <StatusBar style="auto" />
     </View>
