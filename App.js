@@ -1,15 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Input from './components/Input';
 
 export default function App() {
   return (
     <View style={styles.background}>
       {/* Header */}
-      <Text style={styles.header}>WELCOME</Text>
+      <Text style={styles.header}>Welcome</Text>
 
       {/* Form Container */}
       <View style={styles.container}>
-        <Text style={styles.container}></Text>
+        <Input title="Name" />
+        <Input title="Email" />
+        <Input title="Password" />
       </View>
       <StatusBar style="auto" />
     </View>
