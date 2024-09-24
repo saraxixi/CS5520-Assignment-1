@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Input from './components/Input';
+import Checkbox from './components/Checkbox';
 
 export default function App() {
   return (
@@ -13,8 +14,11 @@ export default function App() {
         <Input title="Name" shouldFocus={false}/>
         <Input title="Email" shouldFocus={false}/>
         <Input title="Phone Number" shouldFocus={false}/>
+        <Checkbox/>
       </View>
       <StatusBar style="auto" />
+
+      {/* Checkbox for robat */}
     </View>
   );
 }
