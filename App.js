@@ -29,7 +29,10 @@ export default function App() {
   }
 
   return (
-    <View style={styles.background}>
+    <LinearGradient
+      colors={['#90CAF9', '#A4C1F2', '#9FA8DA']}
+      style={styles.background}
+    >
       {/* Header */}
       <Text style={styles.header}>Welcome</Text>
 
@@ -65,8 +68,9 @@ export default function App() {
 
         {/* Reset and Register Button */}
         <View style={styles.buttonContainer}>
-          <Button 
-            title="Reset" 
+          <Button
+            title="Reset"
+            color={'red'}
             onPress={clearInputs}
           />
           <Button
@@ -74,7 +78,6 @@ export default function App() {
             onPress={handleRegister}
           />
         </View>
-
       </View>
         
       {/* Modal */}
@@ -91,17 +94,23 @@ export default function App() {
             <Text style={styles.modalText}>
               {`Hello ${name}!\nHere is the information you entered:\n${email}\n${phone}\nIf it is not correct, please go back and edit them.`}
             </Text>
+            <View style={styles.modalButtonContainer}>
             <Button
-              title="Close"
+              title="Go Back"
+              color={'red'}
               onPress={() => setModalVisible(false)}
             />
+            <Button
+              title="Continue"
+              onPress={() => setModalVisible(false)}
+            />
+            </View>
         </View>
         </LinearGradient>
       </Modal>
       <StatusBar style="auto" />
+      </LinearGradient>
 
-
-    </View>
   );
 }
 
@@ -133,8 +142,9 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
   },
 
   modalBackground: {
@@ -148,7 +158,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#ffffff',
     padding: 20,
-    alignItems: 'flex-start',
   },
 
   modalText: {
@@ -156,5 +165,12 @@ const styles = StyleSheet.create({
     color: '#7E45AB',
     textAlign: 'left',
     width: '100%',
+  },
+
+  modalButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
   },
 });
