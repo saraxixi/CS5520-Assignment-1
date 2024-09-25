@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-export default function Input({ title, value, onChangeText, shouldFocus }) {
+export default function Input({ title, value, onChangeText, shouldFocus, isInputValid, setInputValid }) {
   const[messages, setMessages] = useState('');
   const[isFocused, setIsFocused] = useState(false);
   
@@ -20,12 +20,18 @@ export default function Input({ title, value, onChangeText, shouldFocus }) {
   }
 
   useEffect(() => {
-    if (!validateInput(title, value) && isFocused) {
-        setMessages('Please enter a valid ' + title.toLowerCase());
-      } else {
-        setMessages('');
-      }
-    }, [value, isFocused]);
+    const isValid = validateInput(title, value);
+    
+    if (isFocused && !isValid) {
+      setMessages(`Please enter a valid ${title.toLowerCase()}`);
+      setInputValid(false);
+    } else if (isValid) {
+      setMessages('');
+      setInputValid(true);
+    } else {
+      setInputValid(false);
+    }
+  }, [value, isFocused]);
 
   function handleBlur() {
     setIsFocused(false);
