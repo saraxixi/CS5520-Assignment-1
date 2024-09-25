@@ -81,7 +81,6 @@ export default function App() {
       <Modal
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
       >
         <LinearGradient
           colors={['rgba(255, 255, 255, 0.7)', 'rgba(255, 255, 255, 0.5)', 'rgba(255, 255, 255, 0.7)']}
@@ -89,7 +88,9 @@ export default function App() {
           style={styles.modalBackground}
         >
           <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>Thank you for registering!</Text>
+            <Text style={styles.modalText}>
+              {`Hello ${name}!\nHere is the information you entered:\n${email}\n${phone}\nIf it is not correct, please go back and edit them.`}
+            </Text>
             <Button
               title="Close"
               onPress={() => setModalVisible(false)}
@@ -140,5 +141,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  modalContainer: {
+    width: '80%',
+    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    padding: 20,
+    alignItems: 'flex-start',
+  },
+
+  modalText: {
+    fontSize: 16,
+    color: '#7E45AB',
+    textAlign: 'left',
+    width: '100%',
   },
 });
