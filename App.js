@@ -1,9 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useState } from 'react';
 import Input from './components/Input';
 import Checkbox from './components/Checkbox';
 
 export default function App() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+
+  function clearInputs() {
+    setName('');
+    setEmail('');
+    setPhone('');
+  }
+
   return (
     <View style={styles.background}>
       {/* Header */}
@@ -11,14 +22,29 @@ export default function App() {
 
       {/* Form Container */}
       <View style={styles.container}>
-        <Input title="Name" shouldFocus={false}/>
-        <Input title="Email" shouldFocus={false}/>
-        <Input title="Phone Number" shouldFocus={false}/>
+        <Input title="Name" value={name} onChangeText={setName} shouldFocus={false}/>
+        <Input title="Email" value={email} onChangeText={setEmail} shouldFocus={false}/>
+        <Input title="Phone Number" value={phone} onChangeText={setPhone} shouldFocus={false}/>
+
+        {/* Checkbox for robat */}
         <Checkbox/>
+
+        {/* Reset and Register Button */}
+        <View style={styles.buttonContainer}>
+          <Button 
+            title="Reset" 
+            onPress={clearInputs}
+          />
+          <Button
+            title="Register"
+            onPress={() => {}}
+          />
+        </View>
+
       </View>
       <StatusBar style="auto" />
 
-      {/* Checkbox for robat */}
+
     </View>
   );
 }
@@ -48,4 +74,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 80,
   },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  }
 });

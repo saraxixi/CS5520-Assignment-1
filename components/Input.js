@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function Input({title, shouldFocus}) {
-  const[text, setText] = useState('');
+export default function Input({ title, value, onChangeText, shouldFocus }) {
   const[messages, setMessages] = useState('');
   const[isFocused, setIsFocused] = useState(false);
   
@@ -20,36 +19,33 @@ export default function Input({title, shouldFocus}) {
     return false;
   }
 
-  function updateText(changeText) {
-    setText(changeText);
-
-    if (validateInput(title, changeText)) {
-      setMessages('');
-    } else {
-      setMessages('Please enter a valid ' + title.toLowerCase());
-    }
-  }
+  useEffect(() => {
+    if (!validateInput(title, value) && isFocused) {
+        setMessages('Please enter a valid ' + title.toLowerCase());
+      } else {
+        setMessages('');
+      }
+    }, [value, isFocused]);
 
   function handleBlur() {
     setIsFocused(false);
+    if (!validateInput(title, value)) {
+      setMessages(`Please enter a valid ${title.toLowerCase()}`);
+    }
   }
 
   function handleFocus() {
     setIsFocused(true);
-    if (!validateInput(title, text)) {
-      setMessages('Please enter a valid ' + title.toLowerCase());
-    } else {
-      setMessages('');
-    }
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <TextInput style={styles.input}
+      <TextInput
+        style={styles.input}
         keyboardType = 'default'
-        value = {text}
-        onChangeText = {updateText}
+        value = {value}
+        onChangeText = {onChangeText}
         onFocus={handleFocus}
         onBlur={handleBlur}
         autoFocus={shouldFocus}
