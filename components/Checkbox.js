@@ -6,14 +6,30 @@ export default function Checkbox() {
   const [isChecked, setChecked] = useState(false);
 
   return (
-    <View>
+    <View style={styles.container}>
         <CheckBox
+            containerStyle={styles.CheckBox}
             checked={isChecked}
             onPress={() => setChecked(!isChecked)}
         />
-        <Text>I am not a robat</Text>
+        <Text style={styles.text}>I am not a robat</Text>
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignItems: 'left',
+    },
+
+    CheckBox: {
+        padding: 0,
+        margin: 0,
+    },
+
+    text: {
+        fontSize: 16,
+        color: '#7E45AB',
+    }
+})
