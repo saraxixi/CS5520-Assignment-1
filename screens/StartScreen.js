@@ -1,10 +1,11 @@
-import { SafeAreaView, StyleSheet, Text, View, Button } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Button, Modal } from 'react-native'
 import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar'
 import Input from '../components/Input'
 import Checkbox from '../components/Checkbox'
+import ConfirmScreen from './ConfirmScreen'
 
-export default function StartScreen({navigate}) {
+export default function StartScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -12,6 +13,8 @@ export default function StartScreen({navigate}) {
   const [isEmailValid, setEmailValid] = useState(false);
   const [isPhoneValid, setPhoneValid] = useState(false);
   const [isChecked, setChecked] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userData, setUserData] = useState({name: '', email: '', phone: ''});
 
   function clearInputs() {
     setName('');
@@ -21,8 +24,8 @@ export default function StartScreen({navigate}) {
 
   function handleRegister() {
     if (isNameValid && isEmailValid && isPhoneValid) {
-      navigate('Confirm');
-      // setModalVisible(true);
+      setUserData({name, email, phone});
+      setModalVisible(true);
     } else {
       alert('Please fill out all fields with valid information');
     }
@@ -77,6 +80,12 @@ export default function StartScreen({navigate}) {
           <StatusBar style='auto' />
         </View>
       </View>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+      >
+        <ConfirmScreen setModalVisible={setModalVisible} userData={userData}/>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -84,7 +93,7 @@ export default function StartScreen({navigate}) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'lightgrey',
     padding: 20,
     width: '80%',
     textAlign: 'center',

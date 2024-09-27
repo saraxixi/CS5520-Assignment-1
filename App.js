@@ -8,14 +8,11 @@ import ConfirmScreen from './screens/ConfirmScreen';
 export default function App() {
   // const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('Start');
-  const [userData, setUserData] = useState({name: '', email: '', phone: ''});
 
   function switchScreens() {
     switch (currentScreen) {
       case 'Start':
-        return <StartScreen navigate={setCurrentScreen}/>
-      case 'Confirm':
-        return <ConfirmScreen navigate={setCurrentScreen}/>;
+        return <StartScreen/>
       case 'Game':
         return <GameScreen/>;
       default:
@@ -42,32 +39,5 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     // alignItems: 'center',
-  },
-
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  modalContainer: {
-    width: '80%',
-    borderRadius: 10,
-    backgroundColor: '#ffffff',
-    padding: 20,
-  },
-
-  modalText: {
-    fontSize: 16,
-    color: '#7E45AB',
-    textAlign: 'left',
-    width: '100%',
-  },
-
-  modalButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
   },
 });
