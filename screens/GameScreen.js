@@ -75,12 +75,12 @@ export default function GameScreen({userData}) {
     }
 
     if (guess === chosenNumber) {
-      Alert.alert('You won!', 'Congratulations! You guessed the number correctly.')
+      setShowGameOverCard(true)
       restartGame()
     } else {
       setAttemptsLeft(attemptsLeft - 1)
       setGuesses(guesses => guesses ? [...guesses, guess] : [guess])
-      setResultMessage(guess < chosenNumber ? 'Guess higher!' : 'Guess lower!')
+      setResultMessage(guess < chosenNumber ? 'You should guess higher!' : 'You should guess lower!')
       setShowResultCard(true)
 
       if (attemptsLeft - 1 === 0) {
@@ -96,31 +96,32 @@ export default function GameScreen({userData}) {
         <View style={styles.buttonContainer}>
           <Button title="Restart" onPress={restartGame}/>
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>Guess a number between 1 & 100</Text>
-          <Text style={styles.text}>that is multiply of {lastDigit}</Text>
+
 
           {gameStarted ? (
-            <View>
+            <View style={styles.textContainer}>
               {!showResultCard && !showGameOverCard && (
-                <>
-              <TextInput
-                style={styles.input}
-                placeholder=""
-                keyboardType="numeric"
-                value={userInput}
-                onChangeText={setUserInput}
-                textAlign='center'
-              />
-              <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
-              <Text style={styles.statusText}>Timer: {timer}s</Text>
-              <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
-              <Button title="Submit guess" onPress={submitGuess}/>
-              </>
+              <View style={styles.gameCard}>
+                <Text style={styles.text}>Guess a number between 1 & 100</Text>
+                <Text style={styles.text}>that is multiply of {lastDigit}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder=""
+                  keyboardType="numeric"
+                  value={userInput}
+                  onChangeText={setUserInput}
+                  textAlign='center'
+                />
+                <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
+                <Text style={styles.statusText}>Timer: {timer}s</Text>
+                <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
+                <Button title="Submit guess" onPress={submitGuess}/>
+              </View>
               )}
 
               {showResultCard && (
                 <View>
+                  <Text style={styles.text}>You did not guess correct!</Text>
                   <Text style={styles.text}>{resultMessage}</Text>
                   <Button title="Try Again" onPress={() => setShowResultCard(false)} />
                   <Button title="End the game" onPress={() => setShowGameOverCard(true)} />
@@ -136,9 +137,12 @@ export default function GameScreen({userData}) {
               
             </View>
             ) : (
-            <Button title='Start' onPress={startGame}/>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>Guess a number between 1 & 100</Text>
+              <Text style={styles.text}>that is multiply of {lastDigit}</Text>
+              <Button title='Start' onPress={startGame}/>
+            </View>
           )}
-        </View>
     </SafeAreaView>
   )
 }
@@ -168,10 +172,23 @@ const styles = StyleSheet.create({
   input: {
     borderBottomColor: '#7E45AB',
     borderBottomWidth: 2,
+    width: 100,
+  },
+
+  gameCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   text: {
     fontSize: 16,
     color: '#7E45AB',
+  },
+
+  statusText: {
+    fontSize: 16,
+    color: 'black',
+    marginTop: 10,
+    alignItems: 'center',
   },
 })
