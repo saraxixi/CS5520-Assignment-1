@@ -8,13 +8,14 @@ import GameScreen from './screens/GameScreen';
 export default function App() {
   // const [modalVisible, setModalVisible] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('Start');
+  const [userData, setUserData] = useState({name: '', email: '', phone: ''});
 
   function switchScreens() {
     switch (currentScreen) {
       case 'Start':
-        return <StartScreen navigate={setCurrentScreen}/>
+        return <StartScreen navigate={setCurrentScreen} userData={userData} setUserData={setUserData}/>
       case 'Game':
-        return <GameScreen/>;
+        return <GameScreen userData={userData}/>;
       default:
         return null;
     }

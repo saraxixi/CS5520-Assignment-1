@@ -5,7 +5,7 @@ import Input from '../components/Input'
 import Checkbox from '../components/Checkbox'
 import ConfirmScreen from './ConfirmScreen'
 
-export default function StartScreen({navigate}) {
+export default function StartScreen({navigate, userData, setUserData}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -14,7 +14,6 @@ export default function StartScreen({navigate}) {
   const [isPhoneValid, setPhoneValid] = useState(false);
   const [isChecked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userData, setUserData] = useState({name: '', email: '', phone: ''});
 
   function clearInputs() {
     setName('');
