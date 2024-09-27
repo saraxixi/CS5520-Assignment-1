@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 
 export default function GameScreen({userData}) {
   const [gameStarted, setGameStarted] = useState(false)
-  const [timer, setTimer] = useState(60)
+  const [timer, setTimer] = useState(10)
   const [userInput, setUserInput] = useState('')
   const [attemptsLeft, setAttemptsLeft] = useState(4)
   const [chosenNumber, setChosenNumber] = useState(null)
@@ -12,9 +12,9 @@ export default function GameScreen({userData}) {
   const [showHintCard, setShowHintCard] = useState(false)
   const [showGameOverCard, setShowGameOverCard] = useState(false)
   const [showSuccessCard, setShowSuccessCard] = useState(false)
-  const [hintMessage, setHintMessage] = useState('')
   const [showResultCard, setShowResultCard] = useState(false)
   const [resultMessage, setResultMessage] = useState('')
+  const [gameOverMessage, setGameOverMessage] = useState('')
 
   const lastDigit = userData.phone ? userData.phone.toString().slice(-1) : '';
   const multiples = lastDigit !== '' ? Array.from({ length: Math.floor(100 / lastDigit) }, (_, i) => (i + 1) * lastDigit) : [];
@@ -28,8 +28,8 @@ export default function GameScreen({userData}) {
     }
 
     if (timer === 0) {
-      Alert.alert('Time is up!', 'You ran out of time. Please try again.')
-      restartGame()
+      setShowGameOverCard(true)
+      setGameOverMessage('You are out of time.')
     }
   }, [gameStarted, timer])
 
@@ -85,6 +85,7 @@ export default function GameScreen({userData}) {
 
       if (attemptsLeft - 1 === 0) {
         setShowGameOverCard(true)
+        setGameOverMessage('You are out of attempts.')
       } else {
         setShowResultCard(true)
       }
@@ -114,8 +115,10 @@ export default function GameScreen({userData}) {
                   onChangeText={setUserInput}
                   textAlign='center'
                 />
-                <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
-                <Text style={styles.statusText}>Timer: {timer}s</Text>
+                <View style={styles.statusContainer}>
+                  <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
+                  <Text style={styles.statusText}>Timer: {timer}s</Text>
+                </View>
                 <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
                 <Button title="Submit guess" onPress={submitGuess}/>
               </View>
@@ -141,13 +144,18 @@ export default function GameScreen({userData}) {
                     source={{ uri: `https://picsum.photos/id/${chosenNumber}/100/100` }}
                     style={styles.image}
                   />
-                  <Button title="Restart" onPress={restartGame} />
+                  <Button title="New Game" onPress={restartGame} />
                 </View>
               )}
 
               {showGameOverCard && (
                 <View style={styles.gameOverCard}>
-                  <Text style={styles.text}>Game Over! The correct number was {chosenNumber}.</Text>
+                  <Text style={styles.text}>The Game is over!</Text>
+                  <Image
+                    source={require('../assets/sad.png')}
+                    style={styles.image}
+                  />
+                  <Text style={styles.text}>{gameOverMessage}</Text>
                   <Button title="Restart" onPress={restartGame} />
                 </View>
               )}
@@ -190,6 +198,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#7E45AB',
     borderBottomWidth: 2,
     width: 100,
+    margin: 20,
   },
 
   gameCard: {
@@ -217,6 +226,12 @@ const styles = StyleSheet.create({
     color: '#7E45AB',
   },
 
+  statusContainer: {
+    width: '100%',
+    margin:30,
+    alignItems: 'center',
+  },
+
   image: {
     width: 100,
     height: 100,
@@ -225,8 +240,7 @@ const styles = StyleSheet.create({
 
   statusText: {
     fontSize: 16,
-    color: 'black',
-    marginTop: 10,
+    color: '#555555',
     alignItems: 'center',
   },
 })

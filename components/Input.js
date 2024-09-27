@@ -13,7 +13,7 @@ export default function Input({ title, value, onChangeText, shouldFocus, isInput
         return emailRegex.test(value);
     } else if (type === 'Phone Number') {
         const phoneRegex = /^[0-9]{10}$/;
-        return phoneRegex.test(value);
+        return phoneRegex.test(value) && value[value.length - 1] !== '0' && value[value.length - 1] !== '1';
     }
 
     return false;

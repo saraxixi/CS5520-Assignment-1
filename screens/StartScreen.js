@@ -22,7 +22,7 @@ export default function StartScreen({navigate, userData, setUserData}) {
   }
 
   function handleRegister() {
-    if (isNameValid && isEmailValid && isPhoneValid) {
+    if (isNameValid && isEmailValid && isPhoneValid && isChecked) {
       setUserData({name, email, phone});
       setModalVisible(true);
     } else {
