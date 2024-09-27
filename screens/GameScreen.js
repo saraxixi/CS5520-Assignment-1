@@ -9,9 +9,11 @@ export default function GameScreen({userData}) {
   const [chosenNumber, setChosenNumber] = useState(null)
   const [guesses, setGuesses] = useState(null)
   const [hintUsed, setHintUsed] = useState(false)
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-  const [showGameOverModal, setShowGameOverModal] = useState(false)
+  const [showHintCard, setShowHintCard] = useState(false)
+  const [showGameOverCard, setShowGameOverCard] = useState(false)
   const [hintMessage, setHintMessage] = useState('')
+  const [showResultCard, setShowResultCard] = useState(false)
+  const [resultMessage, setResultMessage] = useState('')
 
   const lastDigit = userData.phone ? userData.phone.toString().slice(-1) : '';
   const multiples = lastDigit !== '' ? Array.from({ length: Math.floor(100 / lastDigit) }, (_, i) => (i + 1) * lastDigit) : [];
@@ -48,6 +50,10 @@ export default function GameScreen({userData}) {
     setUserInput('')
     setAttemptsLeft(4)
     setGuesses(null)
+    setHintUsed(false)
+    setShowHintCard(false)
+    setShowGameOverCard(false)
+    setShowResultCard(false)
     console.debug("Pressed Restart")
   }
 
@@ -62,17 +68,26 @@ export default function GameScreen({userData}) {
 
   function submitGuess() {
     const guess = parseInt(userInput)
+
+    if (isNaN(guess) || guess < 1 || guess > 100) {
+      Alert.alert('Invalid guess', 'Please enter a number between 1 and 100.')
+      return
+    }
+
     if (guess === chosenNumber) {
       Alert.alert('You won!', 'Congratulations! You guessed the number correctly.')
       restartGame()
     } else {
       setAttemptsLeft(attemptsLeft - 1)
       setGuesses(guesses => guesses ? [...guesses, guess] : [guess])
-      if (attemptsLeft === 0) {
-        Alert.alert('Game over', `You ran out of attempts. The correct number was ${chosenNumber}.`)
-        restartGame()
+      setResultMessage(guess < chosenNumber ? 'Guess higher!' : 'Guess lower!')
+      setShowResultCard(true)
+
+      if (attemptsLeft - 1 === 0) {
+        setShowGameOverCard(true)
       }
     }
+    setUserInput('')
     console.debug("Pressed Submit")
   }
 
@@ -87,6 +102,8 @@ export default function GameScreen({userData}) {
 
           {gameStarted ? (
             <View>
+              {!showResultCard && !showGameOverCard && (
+                <>
               <TextInput
                 style={styles.input}
                 placeholder=""
@@ -99,6 +116,24 @@ export default function GameScreen({userData}) {
               <Text style={styles.statusText}>Timer: {timer}s</Text>
               <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
               <Button title="Submit guess" onPress={submitGuess}/>
+              </>
+              )}
+
+              {showResultCard && (
+                <View>
+                  <Text style={styles.text}>{resultMessage}</Text>
+                  <Button title="Try Again" onPress={() => setShowResultCard(false)} />
+                  <Button title="End the game" onPress={() => setShowGameOverCard(true)} />
+                </View>
+              )}
+
+              {showGameOverCard && (
+                <View style={styles.card}>
+                  <Text style={styles.text}>Game Over! The correct number was {chosenNumber}.</Text>
+                  <Button title="Restart" onPress={restartGame} />
+                </View>
+              )}
+              
             </View>
             ) : (
             <Button title='Start' onPress={startGame}/>
