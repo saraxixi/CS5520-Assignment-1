@@ -5,7 +5,7 @@ import Input from '../components/Input'
 import Checkbox from '../components/Checkbox'
 import ConfirmScreen from './ConfirmScreen'
 
-export default function StartScreen() {
+export default function StartScreen({navigate}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -84,7 +84,7 @@ export default function StartScreen() {
         transparent={true}
         visible={modalVisible}
       >
-        <ConfirmScreen setModalVisible={setModalVisible} userData={userData}/>
+        <ConfirmScreen setModalVisible={setModalVisible} navigate={navigate} userData={userData}/>
       </Modal>
     </SafeAreaView>
   )

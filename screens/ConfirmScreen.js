@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, Text, View, Modal, Button } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient'
 import React, {useState} from 'react'
 
-export default function ConfirmScreen({setModalVisible, userData}) {
+export default function ConfirmScreen({setModalVisible, navigate, userData}) {
 
   return (
     <LinearGradient
@@ -24,7 +24,7 @@ export default function ConfirmScreen({setModalVisible, userData}) {
         />
         <Button
           title="Continue"
-          onPress={() => setModalVisible(false)}
+          onPress={() => navigate('Game')}
         />
         </View>
       </View>

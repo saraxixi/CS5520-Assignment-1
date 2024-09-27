@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import StartScreen from './screens/StartScreen';
-import ConfirmScreen from './screens/ConfirmScreen';
+import GameScreen from './screens/GameScreen';
 
 export default function App() {
   // const [modalVisible, setModalVisible] = useState(false);
@@ -12,7 +12,7 @@ export default function App() {
   function switchScreens() {
     switch (currentScreen) {
       case 'Start':
-        return <StartScreen/>
+        return <StartScreen navigate={setCurrentScreen}/>
       case 'Game':
         return <GameScreen/>;
       default:
@@ -27,17 +27,11 @@ export default function App() {
     >
     {switchScreens()}
     </LinearGradient>
-        
-    //   {/* Modal */}
-
-    //   <StatusBar style="auto" />
-    //   </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    // alignItems: 'center',
   },
 });
