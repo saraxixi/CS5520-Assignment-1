@@ -2,8 +2,7 @@ import { StyleSheet, Text, View} from 'react-native'
 import React, {useState} from 'react'
 import { CheckBox } from 'react-native-elements'
 
-export default function Checkbox() {
-  const [isChecked, setChecked] = useState(false);
+export default function Checkbox({ isChecked, setChecked }) {
 
   return (
     <View style={styles.container}>
