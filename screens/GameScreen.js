@@ -32,7 +32,7 @@ export default function GameScreen({userData}) {
       console.debug("The chosen number is: ", chosenNumber);
     }
   }, [chosenNumber]);
-  
+
   function startGame() {
     setGameStarted(true)
     setChosenNumber(multiples[Math.floor(Math.random() * multiples.length)])
@@ -50,6 +50,10 @@ export default function GameScreen({userData}) {
 
   function useHint() {
     setHintUsed(true)
+    if(chosenNumber) {
+      const hint = chosenNumber % 2 === 0 ? 'The chosen number is even.' : 'The chosen number is odd.';
+      Alert.alert('Hint', hint)
+    }
     console.debug("Pressed Hint")
   }
 
@@ -90,7 +94,7 @@ export default function GameScreen({userData}) {
               />
               <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
               <Text style={styles.statusText}>Timer: {timer}s</Text>
-              <Button title="Use a Hint" onPress={useHint}/>
+              <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
               <Button title="Submit guess" onPress={submitGuess}/>
             </View>
             ) : (
