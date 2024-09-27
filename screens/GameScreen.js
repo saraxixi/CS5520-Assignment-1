@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, Button, Modal, TextInput, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Button, Modal, TextInput, Alert, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
 
 export default function GameScreen({userData}) {
@@ -7,10 +7,11 @@ export default function GameScreen({userData}) {
   const [userInput, setUserInput] = useState('')
   const [attemptsLeft, setAttemptsLeft] = useState(4)
   const [chosenNumber, setChosenNumber] = useState(null)
-  const [guesses, setGuesses] = useState(null)
+  const [guesses, setGuesses] = useState([])
   const [hintUsed, setHintUsed] = useState(false)
   const [showHintCard, setShowHintCard] = useState(false)
   const [showGameOverCard, setShowGameOverCard] = useState(false)
+  const [showSuccessCard, setShowSuccessCard] = useState(false)
   const [hintMessage, setHintMessage] = useState('')
   const [showResultCard, setShowResultCard] = useState(false)
   const [resultMessage, setResultMessage] = useState('')
@@ -49,11 +50,12 @@ export default function GameScreen({userData}) {
     setTimer(60)
     setUserInput('')
     setAttemptsLeft(4)
-    setGuesses(null)
+    setGuesses([])
     setHintUsed(false)
     setShowHintCard(false)
     setShowGameOverCard(false)
     setShowResultCard(false)
+    setShowSuccessCard(false)
     console.debug("Pressed Restart")
   }
 
@@ -75,16 +77,16 @@ export default function GameScreen({userData}) {
     }
 
     if (guess === chosenNumber) {
-      setShowGameOverCard(true)
-      restartGame()
+      setShowSuccessCard(true)
     } else {
       setAttemptsLeft(attemptsLeft - 1)
       setGuesses(guesses => guesses ? [...guesses, guess] : [guess])
       setResultMessage(guess < chosenNumber ? 'You should guess higher!' : 'You should guess lower!')
-      setShowResultCard(true)
 
       if (attemptsLeft - 1 === 0) {
         setShowGameOverCard(true)
+      } else {
+        setShowResultCard(true)
       }
     }
     setUserInput('')
@@ -100,7 +102,7 @@ export default function GameScreen({userData}) {
 
           {gameStarted ? (
             <View style={styles.textContainer}>
-              {!showResultCard && !showGameOverCard && (
+              {!showResultCard && !showGameOverCard && !showSuccessCard && (
               <View style={styles.gameCard}>
                 <Text style={styles.text}>Guess a number between 1 & 100</Text>
                 <Text style={styles.text}>that is multiply of {lastDigit}</Text>
@@ -120,16 +122,31 @@ export default function GameScreen({userData}) {
               )}
 
               {showResultCard && (
-                <View>
+                <View style={styles.resultCard}>
                   <Text style={styles.text}>You did not guess correct!</Text>
                   <Text style={styles.text}>{resultMessage}</Text>
                   <Button title="Try Again" onPress={() => setShowResultCard(false)} />
-                  <Button title="End the game" onPress={() => setShowGameOverCard(true)} />
+                  <Button title="End the game" onPress={() => {
+                    setShowGameOverCard(true); 
+                    setShowResultCard(false);
+                  }} />
+                </View>
+              )}
+
+              {showSuccessCard && (
+                <View style={styles.successCard}>
+                  <Text style={styles.text}>You guessed correct!</Text>
+                  <Text style={styles.text}>Attempts used: {guesses.length + 1}</Text>
+                  <Image
+                    source={{ uri: `https://picsum.photos/id/${chosenNumber}/100/100` }}
+                    style={styles.image}
+                  />
+                  <Button title="Restart" onPress={restartGame} />
                 </View>
               )}
 
               {showGameOverCard && (
-                <View style={styles.card}>
+                <View style={styles.gameOverCard}>
                   <Text style={styles.text}>Game Over! The correct number was {chosenNumber}.</Text>
                   <Button title="Restart" onPress={restartGame} />
                 </View>
@@ -180,9 +197,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  gameOverCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  resultCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  successCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   text: {
     fontSize: 16,
     color: '#7E45AB',
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
   },
 
   statusText: {
