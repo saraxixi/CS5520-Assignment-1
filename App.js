@@ -15,7 +15,7 @@ export default function App() {
       case 'Start':
         return <StartScreen navigate={setCurrentScreen} userData={userData} setUserData={setUserData}/>
       case 'Game':
-        return <GameScreen userData={userData}/>;
+        return <GameScreen navigate={setCurrentScreen} userData={userData}/>;
       default:
         return null;
     }

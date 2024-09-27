@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, View, Button, Modal, TextInput, Alert, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
 
-export default function GameScreen({userData}) {
+export default function GameScreen({navigate, userData}) {
   const [gameStarted, setGameStarted] = useState(false)
-  const [timer, setTimer] = useState(10)
+  const [timer, setTimer] = useState(1)
   const [userInput, setUserInput] = useState('')
   const [attemptsLeft, setAttemptsLeft] = useState(4)
   const [chosenNumber, setChosenNumber] = useState(null)
@@ -144,7 +144,7 @@ export default function GameScreen({userData}) {
                     source={{ uri: `https://picsum.photos/id/${chosenNumber}/100/100` }}
                     style={styles.image}
                   />
-                  <Button title="New Game" onPress={restartGame} />
+                  <Button title="New Game" onPress={() => navigate("Start")} />
                 </View>
               )}
 
@@ -156,7 +156,7 @@ export default function GameScreen({userData}) {
                     style={styles.image}
                   />
                   <Text style={styles.text}>{gameOverMessage}</Text>
-                  <Button title="Restart" onPress={restartGame} />
+                  <Button title="New Game" onPress={() => navigate("Start")} />
                 </View>
               )}
               
