@@ -9,6 +9,9 @@ export default function GameScreen({userData}) {
   const [chosenNumber, setChosenNumber] = useState(null)
   const [guesses, setGuesses] = useState(null)
   const [hintUsed, setHintUsed] = useState(false)
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+  const [showGameOverModal, setShowGameOverModal] = useState(false)
+  const [hintMessage, setHintMessage] = useState('')
 
   const lastDigit = userData.phone ? userData.phone.toString().slice(-1) : '';
   const multiples = lastDigit !== '' ? Array.from({ length: Math.floor(100 / lastDigit) }, (_, i) => (i + 1) * lastDigit) : [];
