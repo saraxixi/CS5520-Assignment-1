@@ -1,15 +1,17 @@
 import { SafeAreaView, StyleSheet, Text, View, Button, Modal, TextInput, Alert, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
+import Card from '../components/Card'
 
 export default function GameScreen({navigate, userData}) {
   const [gameStarted, setGameStarted] = useState(false)
-  const [timer, setTimer] = useState(1)
+  const [timer, setTimer] = useState(60)
   const [userInput, setUserInput] = useState('')
   const [attemptsLeft, setAttemptsLeft] = useState(4)
   const [chosenNumber, setChosenNumber] = useState(null)
   const [guesses, setGuesses] = useState([])
   const [hintUsed, setHintUsed] = useState(false)
-  const [showHintCard, setShowHintCard] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [hintMessage, setHintMessage] = useState('')
   const [showGameOverCard, setShowGameOverCard] = useState(false)
   const [showSuccessCard, setShowSuccessCard] = useState(false)
   const [showResultCard, setShowResultCard] = useState(false)
@@ -20,7 +22,7 @@ export default function GameScreen({navigate, userData}) {
   const multiples = lastDigit !== '' ? Array.from({ length: Math.floor(100 / lastDigit) }, (_, i) => (i + 1) * lastDigit) : [];
 
   useEffect(() => {
-    if (gameStarted && timer > 0) {
+    if (gameStarted && timer > 0 && !isPaused) {
       const intervalId = setInterval(() => {
         setTimer(timer => timer - 1)
       }, 1000)
@@ -31,7 +33,7 @@ export default function GameScreen({navigate, userData}) {
       setShowGameOverCard(true)
       setGameOverMessage('You are out of time.')
     }
-  }, [gameStarted, timer])
+  }, [gameStarted, timer, isPaused])
 
   useEffect(() => {
     if (chosenNumber !== null) {
@@ -49,10 +51,11 @@ export default function GameScreen({navigate, userData}) {
     setGameStarted(false)
     setTimer(60)
     setUserInput('')
+    setChosenNumber(null)
+    setHintMessage('')
     setAttemptsLeft(4)
     setGuesses([])
     setHintUsed(false)
-    setShowHintCard(false)
     setShowGameOverCard(false)
     setShowResultCard(false)
     setShowSuccessCard(false)
@@ -62,8 +65,8 @@ export default function GameScreen({navigate, userData}) {
   function useHint() {
     setHintUsed(true)
     if(chosenNumber) {
-      const hint = chosenNumber % 2 === 0 ? 'The chosen number is even.' : 'The chosen number is odd.';
-      Alert.alert('Hint', hint)
+      const hint = chosenNumber < 50 ? 'The number is between 0 and 50' : 'The number is between 50 and 100';
+      setHintMessage(hint)
     }
     console.debug("Pressed Hint")
   }
@@ -115,51 +118,50 @@ export default function GameScreen({navigate, userData}) {
                   onChangeText={setUserInput}
                   textAlign='center'
                 />
+                {hintMessage ? <Text style={styles.hintText}>{hintMessage}</Text> : null}
                 <View style={styles.statusContainer}>
                   <Text style={styles.statusText}>Attempts left: {attemptsLeft}</Text>
                   <Text style={styles.statusText}>Timer: {timer}s</Text>
                 </View>
-                <Button title="Use a Hint" onPress={useHint} disabled={hintUsed}/>
+                <Button title="Use a Hint" onPress={useHint} disabled={hintUsed} color={hintUsed ? "#FFFFFF" : null}/>
                 <Button title="Submit guess" onPress={submitGuess}/>
               </View>
               )}
 
               {showResultCard && (
-                <View style={styles.resultCard}>
-                  <Text style={styles.text}>You did not guess correct!</Text>
-                  <Text style={styles.text}>{resultMessage}</Text>
-                  <Button title="Try Again" onPress={() => setShowResultCard(false)} />
-                  <Button title="End the game" onPress={() => {
-                    setShowGameOverCard(true); 
+                <Card
+                  title="You did not guess correct!"
+                  message={resultMessage}
+                  buttonText1="Try again"
+                  onPress1={() => setShowResultCard(false)}
+                  buttonText2="End the game"
+                  onPress2={() => {
+                    setShowGameOverCard(true);
                     setShowResultCard(false);
-                  }} />
-                </View>
+                    setIsPaused(true);
+                  }}
+                />
               )}
 
               {showSuccessCard && (
-                <View style={styles.successCard}>
-                  <Text style={styles.text}>You guessed correct!</Text>
-                  <Text style={styles.text}>Attempts used: {guesses.length + 1}</Text>
-                  <Image
-                    source={{ uri: `https://picsum.photos/id/${chosenNumber}/100/100` }}
-                    style={styles.image}
-                  />
-                  <Button title="New Game" onPress={() => navigate("Start")} />
-                </View>
+                <Card
+                  title="You guessed correct!"
+                  message={`Attempts used: ${guesses.length + 1}`}
+                  imageSource={`https://picsum.photos/id/${chosenNumber}/100/100`}
+                  buttonText1="New Game"
+                  onPress1={() => navigate("Start")}
+                />
               )}
 
               {showGameOverCard && (
-                <View style={styles.gameOverCard}>
-                  <Text style={styles.text}>The Game is over!</Text>
-                  <Image
-                    source={require('../assets/sad.png')}
-                    style={styles.image}
-                  />
-                  <Text style={styles.text}>{gameOverMessage}</Text>
-                  <Button title="New Game" onPress={() => navigate("Start")} />
-                </View>
+                <Card
+                  title="The Game is over!"
+                  message={gameOverMessage}
+                  imageSource={require('../assets/sad.png')}
+                  buttonText1="New Game"
+                  onPress1={() => navigate("Start")}
+                />
               )}
-              
             </View>
             ) : (
             <View style={styles.textContainer}>
@@ -206,21 +208,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  gameOverCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  resultCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  successCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
   text: {
     fontSize: 16,
     color: '#7E45AB',
@@ -232,9 +219,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  image: {
-    width: 100,
-    height: 100,
+  hintText: {
+    fontSize: 16,
+    color: '#000000',
     margin: 10,
   },
 
