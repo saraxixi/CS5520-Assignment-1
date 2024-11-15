@@ -1,20 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, Modal } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import StartScreen from './screens/StartScreen';
+import GameScreen from './screens/GameScreen';
 
 export default function App() {
+  // const [modalVisible, setModalVisible] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState('Start');
+  const [userData, setUserData] = useState({name: '', email: '', phone: ''});
+
+  function switchScreens() {
+    switch (currentScreen) {
+      case 'Start':
+        return <StartScreen navigate={setCurrentScreen} userData={userData} setUserData={setUserData}/>
+      case 'Game':
+        return <GameScreen navigate={setCurrentScreen} userData={userData}/>;
+      default:
+        return null;
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LinearGradient
+      colors={['#90CAF9', '#A4C1F2', '#9FA8DA']}
+      style={styles.background}
+    >
+    {switchScreens()}
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
